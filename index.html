@@ -3,140 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Feedback Form</title>
+    <title>Feedback Form</title>
     <style>
         body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             font-family: Arial, sans-serif;
-            line-height: 1.6;
-            max-width: 600px;
-            margin: 0 auto;
+            background-color: #f0f0f0;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
             padding: 20px;
-            background-color: #f5f5f5;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-left:auto;
+            margin-right:auto;
+        }
+        .emoji {
+            font-size: 4em;
+            cursor: pointer;
+            margin: 0 10px;
         }
         .feedback-form {
-            background-color: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+            margin-top: 20px;
+            padding:15px;
         }
-        .form-group {
-            margin-bottom: 20px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        input[type="text"],
-        input[type="email"],
-        select,
-        textarea {
+        .feedback-form input, .feedback-form textarea {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        textarea {
-            height: 100px;
-            resize: vertical;
-        }
-        .rating {
-            display: flex;
-            gap: 10px;
+            padding: 10px;
             margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
-        .rating input[type="radio"] {
-            margin-right: 5px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
+        .feedback-form button {
             padding: 10px 20px;
+            background-color: #007BFF;
+            color: #fff;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
         }
-        button:hover {
-            background-color: #45a049;
+        .feedback-form .buttons {
+            display: flex;
+            justify-content: space-evenly;
+        }
+        .feedback-form button:hover {
+            background-color: #0056b3;
+        }
+        .skip-button {
+            background-color: #6c757d;
+        }
+        .skip-button:hover {
+            background-color: #5a6268;
         }
     </style>
 </head>
 <body>
-    <div class="feedback-form">
-        <h1>We Value Your Feedback!</h1>
-        <p>Please take a moment to let us know how we're doing.</p>
-        
-        <form id="feedbackForm" onsubmit="handleSubmit(event)">
-            <div class="form-group">
-                <label for="name">Name:</label>
-                <input type="text" id="name" name="name" required>
-            </div>
-
-            <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" required>
-            </div>
-
-            <div class="form-group">
-                <label>How satisfied are you with our service?</label>
-                <div class="rating">
-                    <label>
-                        <input type="radio" name="rating" value="1" required>
-                        Very Dissatisfied
-                    </label>
-                    <label>
-                        <input type="radio" name="rating" value="2">
-                        Dissatisfied
-                    </label>
-                    <label>
-                        <input type="radio" name="rating" value="3">
-                        Neutral
-                    </label>
-                    <label>
-                        <input type="radio" name="rating" value="4">
-                        Satisfied
-                    </label>
-                    <label>
-                        <input type="radio" name="rating" value="5">
-                        Very Satisfied
-                    </label>
+    <div class="container">
+        <h1>How was your experience?</h1>
+        <div>
+            <span class="emoji" onclick="handleFeedback('happy')">😄</span>
+            <span class="emoji" onclick="handleFeedback('neutral')">😑</span>
+            <span class="emoji" onclick="handleFeedback('sad')">😔</span>
+        </div>
+        <div id="thankYouMessage" style="display: none;">
+            <h2>Thank you for your feedback!</h2>
+        </div>
+        <div id="feedbackForm" class="feedback-form">
+            <h2>Please provide more details</h2>
+            <form id="feedbackDetailsForm" onsubmit="submitFeedback(event)">
+                <label for="userId">User ID:</label>
+                <input type="text" id="userId" name="userId" required><br><br>
+                <div id="neutralFeedback" style="display: none;">
+                    <label for="feedback_neutral">What can be done better?</label><br>
+                    <textarea id="feedback_neutral" name="feedback_neutral" required rows="4" cols="50"></textarea><br><br>
                 </div>
-            </div>
-
-            <div class="form-group">
-                <label for="category">What are you providing feedback about?</label>
-                <select id="category" name="category" required>
-                    <option value="">Please select...</option>
-                    <option value="product">Product</option>
-                    <option value="service">Customer Service</option>
-                    <option value="website">Website</option>
-                    <option value="other">Other</option>
-                </select>
-            </div>
-
-            <div class="form-group">
-                <label for="feedback">Your Feedback:</label>
-                <textarea id="feedback" name="feedback" required></textarea>
-            </div>
-
-            <button type="submit">Submit Feedback</button>
-        </form>
+                <div id="sadFeedback" style="display: none;">
+                    <label for="feedback_sad">What can be done better?</label><br>
+                    <textarea id="feedback_sad" name="feedback_sad" required rows="4" cols="50"></textarea><br><br>
+                    <label for="issue">What was wrong?</label><br>
+                    <textarea id="issue" name="issue" rows="4" cols="50" required></textarea><br><br>
+                </div>
+                <div class="buttons">
+                    <button type="submit">Submit</button>
+                    <button type="button" class="skip-button" onclick="skipFeedback()">Skip</button>
+                </div>
+            </form>
+        </div>
     </div>
-
     <script>
-        function handleSubmit(event) {
+        function handleFeedback(type) {
+            document.getElementById('thankYouMessage').style.display = 'none';
+            document.getElementById('feedbackForm').style.display = 'none';
+            document.getElementById('neutralFeedback').style.display = 'none';
+            document.getElementById('sadFeedback').style.display = 'none';
+
+            document.getElementById('feedback_neutral').removeAttribute('required');
+            document.getElementById('feedback_sad').removeAttribute('required');
+            document.getElementById('issue').removeAttribute('required');
+
+            if (type === 'happy') {
+                document.body.innerHTML = '<h1>Thank you for your feedback!</h1>';
+            } 
+            else if (type === 'neutral') {
+                document.getElementById('feedbackForm').style.display = 'block';
+                document.getElementById('neutralFeedback').style.display = 'block';
+                document.getElementById('feedback_neutral').setAttribute('required', 'required');
+                document.getElementById('feedbackDetailsForm').onsubmit = function(event) {
+                    if (validateForm('neutral')) {
+                        logNeutralFeedback();
+                        document.body.innerHTML = '<h1>Thank you! We have noted your feedback.</h1>';
+                    }
+                };
+            } 
+            else if (type === 'sad') {
+                document.getElementById('feedbackForm').style.display = 'block';
+                document.getElementById('sadFeedback').style.display = 'block';
+                document.getElementById('feedback_sad').setAttribute('required', 'required');
+                document.getElementById('issue').setAttribute('required', 'required');
+                document.getElementById('feedbackDetailsForm').onsubmit = function(event) {
+                    event.preventDefault();
+                    if (validateForm('sad')) {
+                        logSadFeedback();
+                        document.body.innerHTML = '<h1>Thank you! We will raise a ticket and look into the matter.</h1>';
+                    }
+                };
+            }
+        }
+
+        function submitFeedback(event) {
             event.preventDefault();
-            const formData = new FormData(event.target);
-            const data = Object.fromEntries(formData);
-            
-            // Here you would typically send the data to your server
-            console.log('Form submitted with data:', data);
-            
-            // Show success message
-            alert('Thank you for your feedback!');
-            event.target.reset();
+            document.body.innerHTML = '<h1>Thank you for your feedback!</h1>';
+        }
+
+        function skipFeedback() {
+            document.body.innerHTML = '<h1>Thank you for your feedback!</h1>';
+        }
+
+        function logNeutralFeedback() {
+            const userId = document.getElementById('userId').value;
+            const feedbackNeutral = document.getElementById('feedback_neutral').value;
+
+            console.log('User ID:', userId);
+            console.log('Neutral Feedback:', feedbackNeutral);
+
+            userId.value = '';
+            feedbackNeutral.value = '';
+        }
+
+        function logSadFeedback() {
+            const userId = document.getElementById('userId').value;
+            const feedbackSad = document.getElementById('feedback_sad').value;
+            const issue = document.getElementById('issue').value;
+
+            console.log('User ID:', userId);
+            console.log('Sad Feedback:', feedbackSad);
+            console.log('Issue:', issue);
+
+            userId.value = '';
+            feedbackSad.value = '';
+            issue.value = '';
+        }
+        function validateForm(type) {
+            const userId = document.getElementById('userId').value;
+            if (!userId) {
+                alert('User ID is required');
+                return false;
+            }
+
+            if (type === 'neutral') {
+                const feedbackNeutral = document.getElementById('feedback_neutral').value;
+                if (!feedbackNeutral) {
+                    alert('Neutral feedback is required');
+                    return false;
+                }
+            } else if (type === 'sad') {
+                const feedbackSad = document.getElementById('feedback_sad').value;
+                const issue = document.getElementById('issue').value;
+                if (!feedbackSad || !issue) {
+                    alert('Sad feedback and issue are required');
+                    return false;
+                }
+            }
+
+            return true;
         }
     </script>
 </body>
