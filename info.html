@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Info Page</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <style>
+        body{
+            display:flex;
+            height:100vh;
+            margin:0;
+            font-family: Arial, sans-serif;
+        }
+        .left, .right{
+            flex:1;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            padding:20px;
+            overflow-y: auto;
+            flex-direction: column;
+            color: #fff;
+        }      
+        .left{
+            background-color: #161515;
+        }
+        .right{
+            background-color: #272727;
+        }
+        #carousel-container, #video-container{
+            display:none;
+            justify-content:center;
+            align-items:center;
+            width:100%;
+            padding:10px;
+            flex-direction: column;
+        }
+        .carousel{
+            position: relative;
+            width: 100%;
+            height: 300px;
+            overflow: hidden;
+            padding: 10px;
+        }
+
+        .carousel img{
+            width: 50%;
+            height: 100%;
+            object-fit: contain;
+            display: none;
+            position:relative;
+            margin-left:auto;
+            margin-right:auto;
+        }
+        .carousel img.active{
+            display: block;
+        }
+        .carousel-buttons {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            transform: translateY(-50%);
+        }
+        .carousel-buttons button{
+            background-color: rgba(0,0,0,0.5);
+            color: #fff;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+        .description{
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+        .title{
+            font-weight: 600;
+            font-size: 1.3rem;
+            margin-top: 20px;
+        }
+        .grid{
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: auto;
+            width: 100%;
+        }
+        .card{
+            background-color: transparent;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            overflow: hidden;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .icon{
+            font-size:40px;
+            color:#fff;
+            margin-bottom: 10px;
+        }
+        .card-title{
+            padding: 10px;
+            font-size: 1em;
+            font-weight: 600;
+        }
+        #tips{
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+        #tips h1{
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+        #tips p{
+            font-size: 1em;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="left">
+        <div id="tips">
+            <h1>Tips</h1>
+            <p>Click on the cards to view more information</p>
+        </div>
+        <div id="carousel-container">
+            <div id="carousel">
+                <div class="carousel">
+                    <img src="images/1.jpg" alt="Image 1" class="active">
+                    <img src="images/2.jpg" alt="Image 2">
+                    <img src="images/3.jpg" alt="Image 3">
+                    <div class="carousel-buttons">
+                        <button id="prevButton">&#10094;</button>
+                        <button id="nextButton">&#10095;</button>
+                    </div>
+                </div>
+            </div>
+            <div class="title" id="carouselTitle">Title</div>
+            <div class="description" id="carouselDescription">Description</div>
+        </div>
+        <div id="video-container">
+            <iframe id="video" width="560" height="315" src="" frameborder="0" allowfullscreen></iframe>
+        </div>
+    </div>
+    <div class="right">
+        <div class="grid">
+            <div class="card" onclick="updateCarousel(0)">
+                <i class="bi bi-dpad icon"></i>
+                <div class="card-title">Basic Navigation</div>
+            </div>
+            <div class="card" onclick="updateCarousel(1)">
+                <i class="bi bi-camera-video icon"></i>
+                <div class="card-title">Camera</div>
+            </div>
+            <div class="card" onclick="updateCarousel(2)">
+                <i class="bi bi-easel2 icon"></i>
+                <div class="card-title">Screen Sharing</div>
+            </div>
+            <div class="card" onclick="updateCarousel(3)">
+                <i class="bi bi-layout-split icon"></i>
+                <div class="card-title">Layout</div>
+            </div>
+            <div class="card" onclick="updateVideo('https://www.youtube.com/embed/TJkz7oxIrOw?start=40&autoplay=1')">
+                <i class="bi bi-telephone-outbound icon"></i>
+                <div class="card-title">Joining Teams Call</div>
+            </div>
+            <div class="card" onclick="updateCarousel(5)">
+                <i class="bi bi-star icon"></i>
+                <div class="card-title">Add Favorites</div>
+            </div>
+            <div class="card" onclick="updateCarousel(6)">
+                <i class="bi bi-calendar-minus icon"></i>
+                <div class="card-title">Join a Meeting</div>
+            </div>
+            <div class="card" onclick="updateCarousel(7)">
+                <i class="bi bi-calendar-minus icon"></i>
+                <div class="card-title">Virtual Background</div>
+            </div>
+            <div class="card" onclick="updateCarousel(8)">
+                <i class="bi bi-pen icon"></i>
+                <div class="card-title">Whiteboarding</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let currentImageIndex = 0;
+
+        const imageSets = [
+            {
+                images:["./images/Nav1.png", "./images/Nav2.png", "./images/Nav3.png"],
+                titles:["Open task switcher", "Shortcut to PC Input","Home screen navigation"],
+                description:[
+                    "Swipe up from bottom edge to switch to another app or go to the home screen. You can do this any time",
+                    "If your PC is connected, open the task switcher and tap the PC preview to go back to viewing your laptop screen",
+                    "If there are more apps available, swipe left or right to see more apps"
+                ]
+            },
+            {
+                images:["./images/Camera1.png", "./images/Camera2.png", "./images/Camera3.png"],
+                titles:["Access camera settings", "Camera view","Adjust camera settings"],
+                description:[
+                    "Open the control panel by swiping from the edge of your screen",
+                    "You can see your self-view on the top. Tap camera and select the automatic mode that best suits your meeting",
+                    "Select manual to adjust the camera view. Tap the arrows to pan and tiilt. Adjust the zoom with + or -"
+                ]
+            },
+            {
+                images:["./images/Share1.png","./images/Share2.png"],
+                titles:["Share your screen in a call","Stop Sharing"],
+                description:[
+                    "Connect a laptop with a HDMI or USB-C cable. Share in call in the popup",
+                    "Tap stop sharing on the device's screen"
+                ]
+            },
+            {
+                images:["./images/Layout1.png","./images/Layout2.png"],
+                titles:["Change layout","Change layout"],
+                description:[
+                    "To change the layout in a meeting, tap the layout button",
+                    "Choose the layout that best suits your meeting style"
+                ]
+            },
+            {
+                images:["Sample.png"],
+                titles:["Sample Title"],
+                description:["Sample Description"]
+            },
+            {
+                images:["./images/Fav1.png","./images/Fav2.png","./images/Fav3.png"],
+                titles:["Mark as Favorite","Mark as Favorite","Mark as Favorite"],
+                description:["To add favorites to your calling list, tap the Call button",
+                    "Search for the name of the contact you want to mark as favorite, and tap it",
+                    "Tap the star to mark as favorite"
+                ]
+            },
+            {
+                images:["Sample.png"],
+                titles:["Sample Title"],
+                description:["Sample Description"]
+            },
+            {
+                images:["./images/VB1.png","./images/VB2.png","./images/VB3.png"],
+                titles:["Use Virual Background","Use Virual Background","Use Virual Background"],
+                description:["Open the control panel by swiping from the edge of your screen",
+                    "Tap background to see the different options",
+                    "Select a background"
+                ]
+            },
+            {
+                images:["./images/WB1.png","./images/WB2.png","./images/WB3.png"],
+                titles:["Use Whiteboard","Use your finger or stylus to draw","Create a new whiteboard"],
+                description:["Tap the whiteboard button on your home screen",
+                    "Choose one of the available colors, You can also undo or erase part of your drawing or create shapes",
+                    "Tap the new whiteboard button from the whiteboard menu"
+                ]
+            },
+        ]
+
+        let currentSetIndex = 0;
+
+        function showImage(index){
+            const images = document.querySelectorAll(".carousel img");
+            images.forEach((img, i) => {
+                img.classList.toggle("active", i === index);
+            })
+        }
+
+        function prevImage(){
+            currentImageIndex = (currentImageIndex>0)? currentImageIndex - 1 : imageSets[currentSetIndex].images.length - 1;
+            showImage(currentImageIndex);
+            updateTitleAndDescription(currentImageIndex);
+        }
+
+        function nextImage(){
+            currentImageIndex = (currentImageIndex<imageSets[currentSetIndex].images.length - 1)? currentImageIndex + 1 : 0;
+            showImage(currentImageIndex);
+            updateTitleAndDescription(currentImageIndex);
+        }
+
+        function updateCarousel(setIndex){
+            currentSetIndex = setIndex;
+            currentImageIndex = 0;
+            
+            document.getElementById("tips").style.display = "none";
+            document.getElementById("carousel-container").style.display = "flex";
+
+            const videoContainer = document.getElementById("video-container");
+            const videoFrame = document.getElementById("video");
+            if (videoContainer) {
+                videoContainer.style.display = "none";
+                videoFrame.src = ''; 
+            }
+
+            updateCarouselContent(currentSetIndex,currentImageIndex);
+        }
+
+        function updateVideo(videoUrl){
+            document.getElementById("tips").style.display = "none";
+            document.getElementById("carousel-container").style.display = "none";
+            document.getElementById("video-container").style.display = "flex";
+            document.getElementById("video").src = videoUrl;
+        }
+
+        function updateCarouselContent(setIndex, imageIndex){
+            const carouselImages = document.querySelectorAll(".carousel img");
+
+            carouselImages.forEach((img, i) => {
+                img.src = imageSets[setIndex].images[i];
+                img.alt = `Image ${i+1}`;
+                img.classList.toggle("active", i === imageIndex);
+            })
+
+            updateTitleAndDescription(imageIndex);
+        }
+
+        function updateTitleAndDescription(index){
+            document.getElementById("carouselTitle").textContent = imageSets[currentSetIndex].titles[index];
+            document.getElementById("carouselDescription").textContent = imageSets[currentSetIndex].description[index];
+        }
+
+        document.getElementById("prevButton").addEventListener("click", prevImage);
+        document.getElementById("nextButton").addEventListener("click", nextImage);
+
+        updateCarouselContent(currentSetIndex, currentImageIndex);
+    </script>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
+  </body>
+</html>
+  
